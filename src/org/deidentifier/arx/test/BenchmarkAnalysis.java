@@ -16,6 +16,7 @@ import java.util.List;
 
 import de.linearbits.objectselector.Selector;
 import de.linearbits.objectselector.SelectorBuilder;
+import de.linearbits.subframe.analyzer.Analyzer;
 import de.linearbits.subframe.graph.Field;
 import de.linearbits.subframe.graph.Labels;
 import de.linearbits.subframe.graph.Plot;
@@ -175,7 +176,7 @@ public class BenchmarkAnalysis {
         Plot<?> plot = new PlotHistogramClustered("", new Labels("Testid", "Execution time"), series);
         List<Plot<?>> plotList = new ArrayList<>();
         plotList.add(plot);
-        PlotGroup group = new PlotGroup(title, plotList, getCommonGnuPlotParams(), 1.0d);
+        PlotGroup group = new PlotGroup(title + " (Newest commit left!)", plotList, getCommonGnuPlotParams(), 1.0d);
         return group;
     }
     
@@ -218,7 +219,7 @@ public class BenchmarkAnalysis {
                                                            .neq("select all")
                                                            .end();
         selector = selectorbuilder.build();
-        Series3D series = new Series3D(csvFile, selector, new Field("Testid"), new Field("Git commit"), new Field("Execution time", "Arithmetic Mean"));
+        Series3D series = new Series3D(csvFile, selector, new Field("Testid"), new Field("Git Commit"), new Field("Execution Time", Analyzer.ARITHMETIC_MEAN));
         return series;
     }
     
