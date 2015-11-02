@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import de.linearbits.objectselector.Selector;
 import de.linearbits.objectselector.SelectorBuilder;
-import de.linearbits.subframe.analyzer.Analyzer;
 import de.linearbits.subframe.graph.Field;
 import de.linearbits.subframe.graph.Labels;
 import de.linearbits.subframe.graph.Plot;
@@ -34,7 +34,7 @@ public class BenchmarkAnalysis {
     private static final String path        = "build/junitReports";
     /** The filename prefix of the benchmark csv files. Used for directory filename filtering */
     private static final String filePrefix  = "benchmark_";
-    
+                                            
     /**
      * Main method
      * @param args
@@ -54,9 +54,10 @@ public class BenchmarkAnalysis {
         params.keypos = KeyPos.OUTSIDE_TOP;
         params.colorize = true;
         
-        params.font = "Times-Roman,4";
+        params.font = "Times-Roman,6";
         
         params.rotateXTicks = -90;
+        params.size = 1.5d;
         
         params.minY = 1d;
         params.logY = true;
@@ -91,7 +92,7 @@ public class BenchmarkAnalysis {
             throw new IllegalArgumentException("No result files found at: " + directory.getAbsolutePath());
         }
         
-        Arrays.sort(files, new Comparator<File>() {
+        Arrays.sort(files, Collections.reverseOrder(new Comparator<File>() {
             @Override
             public int compare(File f1, File f2) {
                 String f1Name = getPlotTitle(f1);
@@ -105,7 +106,7 @@ public class BenchmarkAnalysis {
                 }
                 
             }
-        });
+        }));
         
         String title = null;
         BufferedWriter temp = null;
@@ -217,7 +218,7 @@ public class BenchmarkAnalysis {
                                                            .neq("select all")
                                                            .end();
         selector = selectorbuilder.build();
-        Series3D series = new Series3D(csvFile, selector, new Field("Testid"), new Field("Git commit"), new Field("Execution time", Analyzer.ARITHMETIC_MEAN));
+        Series3D series = new Series3D(csvFile, selector, new Field("Testid"), new Field("Git commit"), new Field("Execution time", "Arithmetic Mean"));
         return series;
     }
     
