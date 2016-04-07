@@ -7,6 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +38,8 @@ public class BenchmarkAnalysis {
     private static final String path        = "build/junitReports";
     /** The filename prefix of the benchmark csv files. Used for directory filename filtering */
     private static final String filePrefix  = "benchmark_";
+    /** The filename of the pdf file */
+    private static final String filename    = "/result";
                                             
     /**
      * Main method
@@ -43,7 +48,20 @@ public class BenchmarkAnalysis {
      * @throws ParseException
      */
     public static void main(String[] args) throws IOException, ParseException {
+        deletePDF();
         plotHistogram();
+    }
+    
+    /**
+     * Deletes the existing PDF file
+     */
+    private static void deletePDF() {
+        Path file = FileSystems.getDefault().getPath(path, filename + ".pdf");
+        try {
+            Files.deleteIfExists(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -238,7 +256,7 @@ public class BenchmarkAnalysis {
             plotgroup.add(getHistogram(series, getPlotTitleTempFile(file)));
         }
         
-        LaTeX.plot(plotgroup, path + "/result", false);
+        LaTeX.plot(plotgroup, path + filename, false);
         
         // delete temp files
         for (File file : tempfiles) {
